@@ -11,6 +11,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('accounts/', include('auth.urls')),
     path('', include('pages.urls', namespace='pages')),
+    path('api/', include('api.urls', namespace='api')),
     path('blog/', include('posts.urls', namespace='posts')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('profile/', include('users.urls', namespace='profile')),

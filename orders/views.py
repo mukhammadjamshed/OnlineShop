@@ -18,9 +18,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         products = ProductModel.get_from_cart(self.request)
         form.instance.user = self.request.user
-        form.instance.price = ProductModel.get_from_cart(
-            self.request
-        ).aggregate(Sum('real_price'))['real_price__sum']
+        form.instance.price = products.aggregate(Sum('real_price'))['real_price__sum']
 
         order = form.save()
 

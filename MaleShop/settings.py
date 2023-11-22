@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+
+from decouple import config
 from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-+ttx$&jljwe5l0dggft&0ilp84kzx46ix=b0fl!+i4q&#*-7+h'
+SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
@@ -21,14 +23,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+    'ckeditor',
+    'ckeditor_uploader',
+
     'pages',
     'posts',
     'products',
     'users',
     'orders',
-
-    'ckeditor',
-    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -66,8 +69,12 @@ WSGI_APPLICATION = 'MaleShop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASS'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
@@ -85,7 +92,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 LANGUAGE_CODE = 'en-us'
 
@@ -143,5 +149,17 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'jmukhammadjanov@gmail.com'
-EMAIL_HOST_PASSWORD = 'oltinolmaduool'
+EMAIL_HOST_USER = config('EMAIL_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_PASS')
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
